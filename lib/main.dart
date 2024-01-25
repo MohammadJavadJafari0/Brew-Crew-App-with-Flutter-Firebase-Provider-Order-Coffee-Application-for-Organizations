@@ -1,6 +1,9 @@
+import 'package:brew_crew/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:brew_crew/screens/wrapper.dart';
+import 'package:provider/provider.dart';
+import 'models/my_user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,13 +12,28 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(debugShowCheckedModeBanner: false,
-home: Wrapper(),
+    return StreamProvider<MyUser?>.value(
+      value: AuthService().user,
+      catchError: (context, error) {
+        // Handle the error in StreamProvider
+        print('Error occurred in StreamProvider: $error');
+        return null; // Return a default value or null if necessary
+      },
+      initialData: null,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: Colors.brown[400], // Change background color in all screens
+          colorScheme: const ColorScheme.dark()
+              .copyWith(primary: const Color.fromARGB(255, 224, 150, 60)),
+          hintColor: Colors.tealAccent,
+        ),
+        home: const Wrapper(),
+      ),
     );
   }
 }

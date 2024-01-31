@@ -1,20 +1,15 @@
-import 'package:brew_crew/models/my_user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:brew_crew/services/auth.dart';
 import 'package:flutter/material.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   final Function toggleView;
-  SignIn({required this.toggleView});
+  Register({required this.toggleView});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
-  final FirebaseAuth _auth =
-      FirebaseAuth.instance; // For Anon Firebase Authenticate
-
+class _RegisterState extends State<Register> {
   final AuthService _authService = AuthService();
   String email = "";
   String password = "";
@@ -26,7 +21,7 @@ class _SignInState extends State<SignIn> {
         backgroundColor: const Color(0xFFE69D45),
         elevation: 0.0,
         title: const Text(
-          "Sign in Brew Crew",
+          "Sign up Brew Crew",
           style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
         ),
         actions: [
@@ -52,7 +47,7 @@ class _SignInState extends State<SignIn> {
                       Icon(Icons.person),
                       SizedBox(height: 2),
                       Text(
-                        'Register',
+                        'Sign In',
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -89,17 +84,11 @@ class _SignInState extends State<SignIn> {
                 height: 20.0,
               ),
               ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.brown[900],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
                   onPressed: () async {
                     print(email);
                     print(password);
                   },
-                  child: const Text("sign in"))
+                  child: const Text("register"))
             ],
           ))),
     );

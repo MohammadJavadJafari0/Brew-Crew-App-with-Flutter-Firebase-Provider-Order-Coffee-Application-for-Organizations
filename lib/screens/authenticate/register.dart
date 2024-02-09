@@ -1,5 +1,6 @@
 import 'package:brew_crew/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -11,8 +12,12 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final AuthService _authService = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
+  //for text field
   String email = "";
   String password = "";
+  String error = "";
 
   @override
   Widget build(BuildContext context) {
@@ -61,36 +66,54 @@ class _RegisterState extends State<Register> {
       body: Container(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
+              key: _formKey,
               child: Column(
-            children: [
-              const SizedBox(
-                height: 20.0,
-              ),
-              TextFormField(
-                onChanged: (value) {
-                  setState(() => email = value);
-                },
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              TextFormField(
-                obscureText: true,
-                onChanged: (value) {
-                  setState(() => password = value);
-                },
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    print(email);
-                    print(password);
-                  },
-                  child: const Text("register"))
-            ],
-          ))),
+                children: [
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  TextFormField(
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 224, 150, 60)),
+                    validator: (value) =>
+                        value!.isEmpty ? "Enter a Email" : null,
+                    onChanged: (value) {
+                      setState(() => email = value);
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  TextFormField(
+                    obscureText: true,
+                    validator: (value) => value!.length < 6
+                        ? "Enter a password 6+ chars long"
+                        : null,
+                    onChanged: (value) {
+                      setState(() => password = value);
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        print(email);
+                        print(password);
+                        dynamic result = await _authService
+                            .registerWithEmailAndPassword(email, password);
+                        if (result == null) {
+                          setState(() => error = "Please supply a valid email");
+                        }
+                      }
+                    },
+                    child: const Text("register"),
+                  ),
+                  const SizedBox(height: 14.0,),
+                  Text(error,style: const TextStyle(fontSize: 14,color: Colors.red),)
+                ],
+              ))),
     );
   }
 }

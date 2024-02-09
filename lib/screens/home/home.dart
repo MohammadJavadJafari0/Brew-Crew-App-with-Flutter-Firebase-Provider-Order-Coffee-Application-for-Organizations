@@ -14,12 +14,16 @@ class Home extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 224, 150, 60),
         elevation: 0.0,
         actions: [
-          ElevatedButton.icon(
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0), // Set right padding to 16 pixels
+            child: ElevatedButton.icon(
               onPressed: () async {
                 await _auth.signOut();
               },
               icon: const Icon(Icons.person),
-              label: const Text("Logout"))
+              label: const Text("Logout"),
+            ),
+          ),
         ],
       ),
     );

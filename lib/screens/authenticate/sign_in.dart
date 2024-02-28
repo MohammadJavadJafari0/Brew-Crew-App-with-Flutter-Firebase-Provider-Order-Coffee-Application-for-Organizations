@@ -17,11 +17,11 @@ class _SignInState extends State<SignIn> {
       FirebaseAuth.instance; // For Anon Firebase Authenticate
 
   final AuthService _authService = AuthService();
-    final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   String email = "";
   String password = "";
-    String error = "";
+  String error = "";
 
   @override
   Widget build(BuildContext context) {
@@ -70,61 +70,67 @@ class _SignInState extends State<SignIn> {
       body: Container(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
-            key: _formKey,
+              key: _formKey,
               child: Column(
-            children: [
-              const SizedBox(
-                height: 20.0,
-              ),
-              TextFormField(
-                validator: (value) =>
+                children: [
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  TextFormField(
+                    decoration: textInputDecoration.copyWith(hintText: "Email"),
+                    validator: (value) =>
                         value!.isEmpty ? "Enter a Email" : null,
-                onChanged: (value) {
-                  setState(() => email = value);
-                },
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              TextFormField(
-                obscureText: true,
-                        validator: (value) => value!.length < 6
+                    onChanged: (value) {
+                      setState(() => email = value);
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  TextFormField(
+                    decoration:
+                        textInputDecoration.copyWith(hintText: "Password"),
+                    obscureText: true,
+                    validator: (value) => value!.length < 6
                         ? "Enter a password 6+ chars long"
                         : null,
-                onChanged: (value) {
-                  setState(() => password = value);
-                },
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.brown[900],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                    onChanged: (value) {
+                      setState(() => password = value);
+                    },
                   ),
-                  onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        print("valid");
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.brown[900],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          print("valid");
 
-                        dynamic result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-                        if (result == null) {
-                          setState(() => error = "Could not sign in with those credentials!");
+                          dynamic result =
+                              await _auth.signInWithEmailAndPassword(
+                                  email: email, password: password);
+                          if (result == null) {
+                            setState(() => error =
+                                "Could not sign in with those credentials!");
+                          }
                         }
-                      }
-                  },
-                  child: const Text("sign in")),
-                                    const SizedBox(
+                      },
+                      child: const Text("sign in")),
+                  const SizedBox(
                     height: 14.0,
                   ),
                   Text(
                     error,
                     style: TextStyle(fontSize: 14, color: massagesColor),
                   )
-            ],
-          ))),
+                ],
+              ))),
     );
   }
 }

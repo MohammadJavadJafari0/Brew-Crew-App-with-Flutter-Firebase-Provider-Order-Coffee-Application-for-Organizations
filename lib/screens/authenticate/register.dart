@@ -73,6 +73,7 @@ class _RegisterState extends State<Register> {
                     height: 20.0,
                   ),
                   TextFormField(
+                    decoration: textInputDecoration.copyWith(hintText: "Email"),
                     style: const TextStyle(
                         color: Color.fromARGB(255, 224, 150, 60)),
                     validator: (value) =>
@@ -85,6 +86,7 @@ class _RegisterState extends State<Register> {
                     height: 20.0,
                   ),
                   TextFormField(
+                    decoration: textInputDecoration.copyWith(hintText: "Password"),
                     obscureText: true,
                     validator: (value) => value!.length < 6
                         ? "Enter a password 6+ chars long"

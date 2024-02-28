@@ -1,6 +1,6 @@
 import 'package:brew_crew/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:brew_crew/shared/constants.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -110,8 +110,13 @@ class _RegisterState extends State<Register> {
                     },
                     child: const Text("register"),
                   ),
-                  const SizedBox(height: 14.0,),
-                  Text(error,style: const TextStyle(fontSize: 14,color: Colors.red),)
+                  const SizedBox(
+                    height: 14.0,
+                  ),
+                  Text(
+                    error,
+                    style: TextStyle(fontSize: 14, color: massagesColor),
+                  )
                 ],
               ))),
     );

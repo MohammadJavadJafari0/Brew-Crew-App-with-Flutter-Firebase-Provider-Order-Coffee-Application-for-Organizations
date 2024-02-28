@@ -1,4 +1,5 @@
 import 'package:brew_crew/models/my_user.dart';
+import 'package:brew_crew/shared/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:brew_crew/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,11 @@ class _SignInState extends State<SignIn> {
       FirebaseAuth.instance; // For Anon Firebase Authenticate
 
   final AuthService _authService = AuthService();
+    final _formKey = GlobalKey<FormState>();
+
   String email = "";
   String password = "";
+    String error = "";
 
   @override
   Widget build(BuildContext context) {
@@ -66,12 +70,15 @@ class _SignInState extends State<SignIn> {
       body: Container(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
+            key: _formKey,
               child: Column(
             children: [
               const SizedBox(
                 height: 20.0,
               ),
               TextFormField(
+                validator: (value) =>
+                        value!.isEmpty ? "Enter a Email" : null,
                 onChanged: (value) {
                   setState(() => email = value);
                 },
@@ -81,6 +88,9 @@ class _SignInState extends State<SignIn> {
               ),
               TextFormField(
                 obscureText: true,
+                        validator: (value) => value!.length < 6
+                        ? "Enter a password 6+ chars long"
+                        : null,
                 onChanged: (value) {
                   setState(() => password = value);
                 },
@@ -96,10 +106,23 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   onPressed: () async {
-                    print(email);
-                    print(password);
+                      if (_formKey.currentState!.validate()) {
+                        print("valid");
+
+                        dynamic result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+                        if (result == null) {
+                          setState(() => error = "Could not sign in with those credentials!");
+                        }
+                      }
                   },
-                  child: const Text("sign in"))
+                  child: const Text("sign in")),
+                                    const SizedBox(
+                    height: 14.0,
+                  ),
+                  Text(
+                    error,
+                    style: TextStyle(fontSize: 14, color: massagesColor),
+                  )
             ],
           ))),
     );

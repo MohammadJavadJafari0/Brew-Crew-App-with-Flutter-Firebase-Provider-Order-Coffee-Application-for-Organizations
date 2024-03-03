@@ -1,5 +1,6 @@
 import 'package:brew_crew/models/my_user.dart';
 import 'package:brew_crew/shared/constants.dart';
+import 'package:brew_crew/shared/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:brew_crew/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,10 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  final FirebaseAuth _auth =
-      FirebaseAuth.instance; // For Anon Firebase Authenticate
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
+  bool loading = false;
 
   String email = "";
   String password = "";
@@ -25,112 +25,129 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFE69D45),
-        elevation: 0.0,
-        title: const Text(
-          "Sign in Brew Crew",
-          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-        ),
-        actions: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Ink(
-                width: 95,
-                child: ElevatedButton(
-                  onPressed: () {
-                    widget.toggleView();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.brown[900],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.person),
-                      SizedBox(height: 2),
-                      Text(
-                        'Register',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
+    return loading
+        ? const Loading()
+        : Scaffold(
+            appBar: AppBar(
+              backgroundColor: const Color(0xFFE69D45),
+              elevation: 0.0,
+              title: const Text(
+                "Sign in Brew Crew",
+                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
               ),
-            ),
-          )
-        ],
-      ),
-      body: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-          child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  TextFormField(
-                    decoration: textInputDecoration.copyWith(hintText: "Email"),
-                    validator: (value) =>
-                        value!.isEmpty ? "Enter a Email" : null,
-                    onChanged: (value) {
-                      setState(() => email = value);
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  TextFormField(
-                    decoration:
-                        textInputDecoration.copyWith(hintText: "Password"),
-                    obscureText: true,
-                    validator: (value) => value!.length < 6
-                        ? "Enter a password 6+ chars long"
-                        : null,
-                    onChanged: (value) {
-                      setState(() => password = value);
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.brown[900],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+              actions: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 3.0, bottom: 1.0),
+                    child: Ink(
+                      width: 95,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          widget.toggleView();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.person),
+                            SizedBox(height: 1),
+                            Text(
+                              'Register',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
                         ),
                       ),
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          print("valid");
-
-                          dynamic result =
-                              await _auth.signInWithEmailAndPassword(
-                                  email: email, password: password);
-                          if (result == null) {
-                            setState(() => error =
-                                "Could not sign in with those credentials!");
-                          }
-                        }
-                      },
-                      child: const Text("sign in")),
-                  const SizedBox(
-                    height: 14.0,
+                    ),
                   ),
-                  Text(
-                    error,
-                    style: TextStyle(fontSize: 14, color: massagesColor),
-                  )
-                ],
-              ))),
-    );
+                )
+              ],
+            ),
+            body: Container(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 50.0),
+                child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        TextFormField(
+                          decoration:
+                              textInputDecoration.copyWith(hintText: "Email"),
+                          style: TextStyle(color: userTextColor),
+                          validator: (value) =>
+                              value!.isEmpty || !validateEmail(email)
+                                  ? "Enter a valid Email"
+                                  : null,
+                          onChanged: (value) {
+                            setState(() => email = value);
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        TextFormField(
+                          decoration: textInputDecoration.copyWith(
+                              hintText: "Password"),
+                          style: TextStyle(color: userTextColor),
+                          obscureText: true,
+                          validator: (value) => value!.length < 6
+                              ? "Enter a password 6+ chars long"
+                              : null,
+                          onChanged: (value) {
+                            setState(() => password = value);
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                print("valid");
+                                setState(() {
+                                  loading = true; //loading screen
+                                });
+                                try {
+                                  dynamic result =
+                                      await _auth.signInWithEmailAndPassword(
+                                          email: email, password: password);
+                                  if (result == null) {
+                                    setState(() => error =
+                                        "Could not sign in with those credentials!");
+                                    loading = false;
+                                  }
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == 'user-not-found') {
+                                    setState(() => error =
+                                        "Invalid email or password. Please try again.");
+                                  }
+                                  loading = false;
+                                }
+                              }
+                            },
+                            child: const Text("sign in")),
+                        const SizedBox(
+                          height: 14.0,
+                        ),
+                        Text(
+                          error,
+                          style: TextStyle(fontSize: 14, color: massagesColor),
+                        )
+                      ],
+                    ))),
+          );
   }
 }

@@ -1,24 +1,22 @@
-import 'package:brew_crew/models/my_user.dart';
-import 'package:brew_crew/shared/constants.dart';
-import 'package:brew_crew/shared/loading.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:brew_crew/services/auth.dart';
+import 'package:brew_crew/shared/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:brew_crew/shared/constants.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   final Function toggleView;
-  SignIn({required this.toggleView});
+  Register({required this.toggleView});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class _RegisterState extends State<Register> {
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
 
+  //for text field
   String email = "";
   String password = "";
   String error = "";
@@ -32,14 +30,14 @@ class _SignInState extends State<SignIn> {
               backgroundColor: const Color(0xFFE69D45),
               elevation: 0.0,
               title: const Text(
-                "Sign in Brew Crew",
+                "Sign up Brew Crew",
                 style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
               ),
               actions: [
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 3.0, bottom: 1.0),
+                    padding: const EdgeInsets.all(2.0),
                     child: Ink(
                       width: 95,
                       child: ElevatedButton(
@@ -57,7 +55,7 @@ class _SignInState extends State<SignIn> {
                             Icon(Icons.person),
                             SizedBox(height: 1),
                             Text(
-                              'Register',
+                              'Sign In',
                               style: TextStyle(fontSize: 12),
                             ),
                           ],
@@ -83,9 +81,7 @@ class _SignInState extends State<SignIn> {
                               textInputDecoration.copyWith(hintText: "Email"),
                           style: TextStyle(color: userTextColor),
                           validator: (value) =>
-                              value!.isEmpty || !validateEmail(email)
-                                  ? "Enter a valid Email"
-                                  : null,
+                              value!.isEmpty ? "Enter a Email" : null,
                           onChanged: (value) {
                             setState(() => email = value);
                           },
@@ -109,36 +105,31 @@ class _SignInState extends State<SignIn> {
                           height: 20.0,
                         ),
                         ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                print("valid");
+                          ),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                loading = true;
+                              });
+                              print(email);
+                              print(password);
+                              dynamic result = await _authService
+                                  .registerWithEmailAndPassword(
+                                      email, password);
+                              if (result == null) {
                                 setState(() {
-                                  loading = true; //loading screen
-                                });
-                                try {
-                                  dynamic result =
-                                      await _auth.signInWithEmailAndPassword(
-                                          email: email, password: password);
-                                  if (result == null) {
-                                    setState(() => error =
-                                        "Could not sign in with those credentials!");
-                                    loading = false;
-                                  }
-                                } on FirebaseAuthException catch (e) {
-                                  if (e.code == 'user-not-found') {
-                                    setState(() => error =
-                                        "Invalid email or password. Please try again.");
-                                  }
+                                  error = "Please supply a valid email";
                                   loading = false;
-                                }
+                                });
                               }
-                            },
-                            child: const Text("sign in")),
+                            }
+                          },
+                          child: const Text("register"),
+                        ),
                         const SizedBox(
                           height: 14.0,
                         ),

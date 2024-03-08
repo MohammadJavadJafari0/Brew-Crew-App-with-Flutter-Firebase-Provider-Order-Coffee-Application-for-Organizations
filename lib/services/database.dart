@@ -17,4 +17,9 @@ class DatabaseService {
       print(e.toString());
     }
   }
+
+// get brews stream
+  Stream<QuerySnapshot> get brews {
+    return brewCollection.snapshots();
+  }
 }

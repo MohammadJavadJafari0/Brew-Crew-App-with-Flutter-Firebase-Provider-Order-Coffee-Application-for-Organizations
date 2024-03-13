@@ -4,6 +4,7 @@ import 'package:brew_crew/services/auth.dart';
 import 'package:brew_crew/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:brew_crew/screens/home/settings_form.dart';
 
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
@@ -13,6 +14,21 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+// _showSettingPanel Fuction
+    print("Settings panel is being shown!");
+    void _showSettingsPanel() {
+      showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+              child: SettingsForm(),
+            );
+          });
+    }
+
+// Hoome UI
     return StreamProvider<List<Brew>?>.value(
       value: DatabaseService(uid: uid).brews,
       initialData: null,
@@ -23,8 +39,9 @@ class Home extends StatelessWidget {
           backgroundColor: const Color.fromARGB(255, 224, 150, 60),
           elevation: 0.0,
           actions: [
+            // Logout Icon
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
+              padding: const EdgeInsets.only(right: 4.0),
               child: ElevatedButton.icon(
                 onPressed: () async {
                   await _auth.signOut();
@@ -33,6 +50,18 @@ class Home extends StatelessWidget {
                 label: const Text("Logout"),
               ),
             ),
+
+            // Setting Icon
+            Padding(
+              padding: const EdgeInsets.only(right: 4.0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _showSettingsPanel();
+                },
+                icon: const Icon(Icons.settings),
+                label: const Text("Setting"),
+              ),
+            )
           ],
         ),
         body: const BrewList(), // Use BrewList widget

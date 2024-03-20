@@ -23,7 +23,7 @@ class Home extends StatelessWidget {
             return Container(
               padding:
                   const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-              child: SettingsForm(),
+              child: const SettingsForm(),
             );
           });
     }

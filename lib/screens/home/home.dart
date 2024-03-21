@@ -64,7 +64,12 @@ class Home extends StatelessWidget {
             )
           ],
         ),
-        body: const BrewList(), // Use BrewList widget
+        body: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/coffee_brewcrew_app.png"),
+                    fit: BoxFit.cover)),
+            child: const BrewList()),
       ),
     );
   }

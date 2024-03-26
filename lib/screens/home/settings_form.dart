@@ -1,7 +1,6 @@
 import 'package:brew_crew/models/my_user.dart';
 import 'package:brew_crew/services/database.dart';
 import 'package:brew_crew/shared/constants.dart';
-import 'package:brew_crew/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +37,9 @@ class _SettingsFromState extends State<SettingsForm> {
               const SizedBox(height: 20),
               TextFormField(
                 initialValue: userdata?.name,
-                decoration: textInputDecoration,
+                decoration: textInputDecoration.copyWith(
+                    labelText: 'Enter your name',
+                    labelStyle: const TextStyle(color: Colors.black)),
                 style: const TextStyle(color: Colors.black),
                 validator: (value) =>
                     value!.isEmpty ? "Please enter a name" : null,
@@ -51,7 +52,9 @@ class _SettingsFromState extends State<SettingsForm> {
               ),
               DropdownButtonFormField(
                 dropdownColor: const Color(0xFFFFCC80),
-                decoration: textInputDecoration,
+                decoration: textInputDecoration.copyWith(
+                    labelText: 'Select your sugar level',
+                    labelStyle: const TextStyle(color: Colors.black)),
                 icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
                 value: _currentSugars ?? userdata?.sugars,
                 items: sugars.map((sugar) {
@@ -68,6 +71,22 @@ class _SettingsFromState extends State<SettingsForm> {
                     _currentSugars = value;
                   });
                 },
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Adjust the coffee strength:",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  Text(
+                    "Move the slider to set the coffee strength.",
+                    style: TextStyle(fontSize: 12.0, color: Colors.grey),
+                  ),
+                ],
               ),
               Slider(
                 value:

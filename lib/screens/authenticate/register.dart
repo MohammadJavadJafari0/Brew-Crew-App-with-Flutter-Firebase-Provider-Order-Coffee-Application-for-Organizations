@@ -27,7 +27,7 @@ class _RegisterState extends State<Register> {
         ? const Loading()
         : Scaffold(
             appBar: AppBar(
-              backgroundColor: const Color(0xFFE69D45),
+              backgroundColor: const Color.fromARGB(255, 224, 150, 60),
               elevation: 0.0,
               title: const Text(
                 "Sign up Brew Crew",
@@ -67,6 +67,11 @@ class _RegisterState extends State<Register> {
               ],
             ),
             body: Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image:
+                            AssetImage("assets/grains-coffee-cofee-shop.png"),
+                        fit: BoxFit.cover)),
                 padding: const EdgeInsets.symmetric(
                     vertical: 20.0, horizontal: 50.0),
                 child: Form(

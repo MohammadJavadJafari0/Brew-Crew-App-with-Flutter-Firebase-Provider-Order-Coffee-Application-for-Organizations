@@ -29,7 +29,7 @@ class _SignInState extends State<SignIn> {
         ? const Loading()
         : Scaffold(
             appBar: AppBar(
-              backgroundColor: const Color(0xFFE69D45),
+              backgroundColor: const Color.fromARGB(255, 224, 150, 60),
               elevation: 0.0,
               title: const Text(
                 "Sign in Brew Crew",
@@ -39,7 +39,7 @@ class _SignInState extends State<SignIn> {
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 3.0, bottom: 1.0),
+                    padding: const EdgeInsets.all(2.0),
                     child: Ink(
                       width: 95,
                       child: ElevatedButton(
@@ -69,9 +69,17 @@ class _SignInState extends State<SignIn> {
               ],
             ),
             body: Container(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 20.0, horizontal: 50.0),
-                child: Form(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/cup_a_coffee.png"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+              child: Stack(
+                children: [
+                  Form(
                     key: _formKey,
                     child: Column(
                       children: [
@@ -109,45 +117,50 @@ class _SignInState extends State<SignIn> {
                           height: 20.0,
                         ),
                         ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                print("valid");
-                                setState(() {
-                                  loading = true; //loading screen
-                                });
-                                try {
-                                  dynamic result =
-                                      await _auth.signInWithEmailAndPassword(
-                                          email: email, password: password);
-                                  if (result == null) {
-                                    setState(() => error =
-                                        "Could not sign in with those credentials!");
-                                    loading = false;
-                                  }
-                                } on FirebaseAuthException catch (e) {
-                                  if (e.code == 'user-not-found') {
-                                    setState(() => error =
-                                        "Invalid email or password. Please try again.");
-                                  }
+                          ),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              print("valid");
+                              setState(() {
+                                loading = true; //loading screen
+                              });
+                              try {
+                                dynamic result =
+                                    await _auth.signInWithEmailAndPassword(
+                                        email: email, password: password);
+                                if (result == null) {
+                                  setState(() => error =
+                                      "Could not sign in with those credentials!");
                                   loading = false;
                                 }
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == 'user-not-found') {
+                                  setState(() => error =
+                                      "Invalid email or password. Please try again.");
+                                }
+                                loading = false;
                               }
-                            },
-                            child: const Text("sign in")),
+                            }
+                          },
+                          child: const Text("sign in"),
+                        ),
                         const SizedBox(
                           height: 14.0,
                         ),
                         Text(
                           error,
                           style: TextStyle(fontSize: 14, color: massagesColor),
-                        )
+                        ),
                       ],
-                    ))),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
   }
 }

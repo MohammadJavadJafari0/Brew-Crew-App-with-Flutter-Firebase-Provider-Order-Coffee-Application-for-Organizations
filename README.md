@@ -1,7 +1,7 @@
 <<<<<<< HEAD
-# brew_crew
+# Brew Crew App with Flutter , Firebase & Provider (Order Coffee Application for Organizations)
 
-A new Flutter project.
+codes : select form branches ( main,1 --> 8 )
 
 ## Getting Started
 

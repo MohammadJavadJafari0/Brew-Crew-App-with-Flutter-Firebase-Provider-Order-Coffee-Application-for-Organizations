@@ -1,7 +1,6 @@
 <<<<<<< HEAD
-# brew_crew
+# Brew Crew App with Flutter , Firebase & Provider (Order Coffee Application for Organizations)
 
-A new Flutter project.
 
 ## Getting Started
 

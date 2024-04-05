@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # brew_crew
 
 A new Flutter project.
@@ -18,3 +19,7 @@ samples, guidance on mobile development, and a full API reference.
 =======
 # brew_crew
 >>>>>>> 162f7f50517f4c94c54009395268b9e4ac961745
+=======
+# Brew-Crew-App-with-Flutter-Firebase-Provider-Order-Coffee-Application-for-Organizations-
+Brew Crew App with Flutter , Firebase &amp; Provider (Order Coffee Application for Organizations) 2024
+>>>>>>> 59c1b26d791b823eea52c4cc4006b7aed457e4c2

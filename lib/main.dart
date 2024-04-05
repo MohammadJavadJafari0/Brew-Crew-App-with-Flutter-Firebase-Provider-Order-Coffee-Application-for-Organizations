@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.dark().copyWith(
-          scaffoldBackgroundColor:
-              Colors.brown[400], // Change background color in all screens
+          scaffoldBackgroundColor: const Color.fromARGB(
+              255, 19, 17, 17), // Change background color in all screens
           colorScheme: const ColorScheme.dark()
               .copyWith(primary: const Color.fromARGB(255, 224, 150, 60)),
           hintColor: Colors.tealAccent,

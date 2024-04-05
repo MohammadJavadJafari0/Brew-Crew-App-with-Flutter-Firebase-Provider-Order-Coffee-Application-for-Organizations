@@ -36,7 +36,7 @@ class Home extends StatelessWidget {
         backgroundColor: Colors.brown[400],
         appBar: AppBar(
           title: const Text("Brew Crew"),
-          backgroundColor: const Color.fromARGB(255, 219, 159, 86),
+          backgroundColor: const Color.fromARGB(255, 224, 150, 60),
           elevation: 0.0,
           actions: [
             // Logout Icon
